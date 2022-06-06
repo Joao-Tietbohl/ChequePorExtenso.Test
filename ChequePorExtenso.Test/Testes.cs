@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ChequePorExtenso.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class Testes
     {
         Actions conversor = new Actions();
 

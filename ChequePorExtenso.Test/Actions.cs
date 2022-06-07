@@ -8,7 +8,7 @@ namespace ChequePorExtenso.Test
 {
     public class Actions
     {
-        Dictionary<int, string> numeros = new Dictionary<int, string>();
+        Dictionary<decimal, string> numeros = new Dictionary<decimal, string>();
 
 
         public Actions()
@@ -49,61 +49,125 @@ namespace ChequePorExtenso.Test
             numeros.Add(700, "Setecentos");
             numeros.Add(800, "Oitocentos");
             numeros.Add(900, "Novecentos");
+            numeros.Add(1000, "Mil");
+            numeros.Add(10000, "Milhão");
 
 
 
         }
 
 
-        public string Converter(int numero)
+        public string Converter(decimal numero)
         {
+            decimal centavos = (numero % 1) * 100;
+            numero = Math.Truncate(numero);
+
             string numeroPorExtenso = "";
             string numeroString = numero.ToString();
+            string centavosString = centavos.ToString();
+           
 
 
-
-            if (numero == 100)
-                return "Cem";
-
-            if (numero > 100)
-            {
-                //Pega centena
-                int centena = Int32.Parse(numeroString.Substring(0, 1));
-                centena = centena * 100;
-
-                numeroPorExtenso += numeros[centena];
-
-                numero -= centena;
-
-                numeroPorExtenso += " e ";
-                
-                numeroString = numero.ToString();
-            }
-            //Pega Dezena
-
-            if (numero > 20)
+            if (numero != 1)
             {
 
-                int dezena = Int32.Parse(numeroString.Substring(0, 1));
-                dezena = dezena * 10;
+                if (numero >= 1000)
+                    GetUnidadeMilhar(ref numero, ref numeroPorExtenso, ref numeroString);
+  
 
-                if (dezena != 0)
+                if (numero == 100)
                 {
-   
-                    numeroPorExtenso += numeros[dezena];
-
-                    numero -= dezena;
+                    numeroPorExtenso += "Cem";
+                    numero -= 100;
                 }
 
+                if (numero > 100)
+                    GetCentena(ref numero, ref numeroPorExtenso, ref numeroString);
+                
+  
+                if (numero > 20)
+                    GetDezenaMaiorQue20(ref numero, ref numeroPorExtenso, numeroString);
+                
+
+                if (numero != 0)
+                    numeroPorExtenso += numeros[numero];
+
+
+                numeroPorExtenso += " Reais";
+
+            }
+            else
+            numeroPorExtenso = "Um Real";
+
+           /////////Centavos //////////
+
+            if (centavos != 0) {
 
                 numeroPorExtenso += " e ";
-            }
-                numeroPorExtenso += numeros[numero];
-            
 
+                    if(centavos > 20)
+                    {
+                        GetDezenaMaiorQue20(ref centavos, ref numeroPorExtenso, centavosString);
+                    }
+                
+                    if(numero != 0)
+                    numeroPorExtenso += numeros[numero];
+                
+                return numeroPorExtenso + " Centavos";
 
+                }
+
+            else 
                 return numeroPorExtenso;
-            
+        }
+
+        private void GetDezenaMaiorQue20(ref decimal numero, ref string numeroPorExtenso, string numeroString)
+        {
+            int dezena = Int32.Parse(numeroString.Substring(0, 1));
+            dezena = dezena * 10;
+
+            if (dezena != 0)
+            {
+
+                numeroPorExtenso += numeros[dezena];
+
+                numero -= dezena;
+            }
+
+            if(numero != 0)
+            numeroPorExtenso += " e ";
+        }
+
+        private void GetCentena(ref decimal numero, ref string numeroPorExtenso, ref string numeroString)
+        {
+            //Pega centena
+            int centena = Int32.Parse(numeroString.Substring(0, 1));
+            centena = centena * 100;
+
+            numeroPorExtenso += numeros[centena];
+
+            numero -= centena;
+
+            numeroPorExtenso += " e ";
+
+            numeroString = numero.ToString();
+        }
+
+        private void GetUnidadeMilhar(ref decimal numero, ref string numeroPorExtenso, ref string numeroString)
+        {
+            //Pega Unidade de milhar
+            int unidadeMilhar = Int32.Parse(numeroString.Substring(0, 1));
+            numeroPorExtenso += numeros[unidadeMilhar] + " Mil";
+
+
+            numero -= unidadeMilhar * 1000;
+
+            if (numeros.ContainsKey(numero))
+                numeroPorExtenso += " e ";
+            else
+                numeroPorExtenso += " ";
+
+            numeroString = numero.ToString();
         }
     }
 }

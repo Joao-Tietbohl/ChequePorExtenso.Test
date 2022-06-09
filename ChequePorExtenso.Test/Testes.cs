@@ -64,16 +64,43 @@ namespace ChequePorExtenso.Test
 
 
         [TestMethod]
-        [DataRow(1000, "Um Mil  Reais")]
+        [DataRow(1000, "Um Mil Reais")]
         [DataRow(1005, "Um Mil e Cinco Reais")]
         [DataRow(1030, "Um Mil e Trinta Reais")]
         [DataRow(3576, "Três Mil Quinhentos e Setenta e Seis Reais")]
         [DataRow(9999, "Nove Mil Novecentos e Noventa e Nove Reais")]
         [DataRow(1100.60 , "Um Mil e Cem Reais e Sessenta Centavos")]
         [DataRow(1110.10, "Um Mil Cento e Dez Reais e Dez Centavos")]
-
+        [DataRow(11110.10, "Onze Mil Cento e Dez Reais e Dez Centavos")]
+        [DataRow(40000, "Quarenta Mil Reais")]
+        [DataRow(47500, "Quarenta e Sete Mil e Quinhentos Reais")]
+        [DataRow(15000, "Quinze Mil Reais")]
+        [DataRow(547500.50, "Quinhentos e Quarenta e Sete Mil e Quinhentos Reais e Cinquenta Centavos")]
+        [DataRow(115000, "Cento e Quinze Mil Reais")]
+      
 
         public void Converter_Milhares(double numero, string resultadoEsperado)
+        {
+            //Arrange
+            decimal numeroParaConversao = Convert.ToDecimal(numero);
+
+            //Action
+            var resultadoConversao = conversor.Converter(numeroParaConversao);
+
+            //Assert
+
+            Assert.AreEqual(resultadoEsperado, resultadoConversao);
+        }
+
+        [TestMethod]
+        [DataRow(1000000, "Um Milhão de Reais")]
+        [DataRow(1500000, "Um Milhão e Quinhentos Mil Reais")]
+        [DataRow(1782500, "Um Milhão Setecentos e Oitenta e Dois Mil e Quinhentos Reais")]
+     //   [DataRow(7500000, "Sete Milhões e Quinhentos Mil Reais")]
+
+
+
+        public void Converter_Milhoes(double numero, string resultadoEsperado)
         {
             //Arrange
             decimal numeroParaConversao = Convert.ToDecimal(numero);

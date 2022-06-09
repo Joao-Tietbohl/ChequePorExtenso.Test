@@ -70,6 +70,26 @@ namespace ChequePorExtenso.Test
 
             if (numero != 1)
             {
+                
+
+               if(numero >= 1000000)
+                    GetUnidadeMilhao(ref numero, ref numeroPorExtenso, ref numeroString);
+               
+                if (numero == 100000)
+                {
+                    numeroPorExtenso += "Cem Mil";
+                    numero -= 100000;
+                }
+
+                    if (numero >= 100000)
+                    GetCentenaMilhar(ref numero, ref numeroPorExtenso, ref numeroString);
+
+                if (numero >= 20000)
+                    GetDezenaMilharVintePraCima(ref numero, ref numeroPorExtenso, ref numeroString);
+
+                if(numero >= 10000)
+                    GetDezenaMilhar(ref numero, ref numeroPorExtenso, ref numeroString);
+                
 
                 if (numero >= 1000)
                     GetUnidadeMilhar(ref numero, ref numeroPorExtenso, ref numeroString);
@@ -92,6 +112,8 @@ namespace ChequePorExtenso.Test
                 if (numero != 0)
                     numeroPorExtenso += numeros[numero];
 
+                if (numeroPorExtenso.EndsWith(" "))
+                    numeroPorExtenso = numeroPorExtenso.Substring(0, numeroPorExtenso.Length - 1);
 
                 numeroPorExtenso += " Reais";
 
@@ -137,7 +159,6 @@ namespace ChequePorExtenso.Test
             if(numero != 0)
             numeroPorExtenso += " e ";
         }
-
         private void GetCentena(ref decimal numero, ref string numeroPorExtenso, ref string numeroString)
         {
             //Pega centena
@@ -148,11 +169,11 @@ namespace ChequePorExtenso.Test
 
             numero -= centena;
 
+            if(numero != 0)
             numeroPorExtenso += " e ";
 
             numeroString = numero.ToString();
         }
-
         private void GetUnidadeMilhar(ref decimal numero, ref string numeroPorExtenso, ref string numeroString)
         {
             //Pega Unidade de milhar
@@ -163,6 +184,81 @@ namespace ChequePorExtenso.Test
             numero -= unidadeMilhar * 1000;
 
             if (numeros.ContainsKey(numero))
+                numeroPorExtenso += " e ";
+            else
+                numeroPorExtenso += " ";
+
+            numeroString = numero.ToString();
+        }
+        private void GetDezenaMilhar(ref decimal numero, ref string numeroPorExtenso, ref string numeroString)
+        {
+           
+            int dezenaMilhar = Int32.Parse(numeroString.Substring(0, 2));
+            numeroPorExtenso += numeros[dezenaMilhar] + " Mil";
+
+
+            numero -= dezenaMilhar * 1000;
+
+            if (numeros.ContainsKey(numero))
+                numeroPorExtenso += " e ";
+            else
+                numeroPorExtenso += " ";
+
+            numeroString = numero.ToString();
+        }
+        private void GetDezenaMilharVintePraCima(ref decimal numero, ref string numeroPorExtenso, ref string numeroString)
+        {
+            int dezenaMilhar = Int32.Parse(numeroString.Substring(0, 1));
+            dezenaMilhar = dezenaMilhar * 10;
+
+            if (dezenaMilhar != 0)
+            {
+                numeroPorExtenso += numeros[dezenaMilhar];
+
+                numero -= dezenaMilhar * 1000;
+
+                if (numero < 1000)
+                    numeroPorExtenso += " Mil";
+            }
+
+            if (numero != 0)
+                numeroPorExtenso += " e ";
+
+            numeroString = numero.ToString();
+        }
+        private void GetCentenaMilhar(ref decimal numero, ref string numeroPorExtenso, ref string numeroString)
+        {
+           
+            int centena = Int32.Parse(numeroString.Substring(0, 1));
+            centena = centena * 100;
+
+            numeroPorExtenso += numeros[centena];
+
+            numero -= centena * 1000;
+
+            if (numero > 1000)
+                numeroPorExtenso += " e ";
+            else
+                numeroPorExtenso += " Mil"; 
+
+            numeroString = numero.ToString();
+        }
+        private void GetUnidadeMilhao(ref decimal numero, ref string numeroPorExtenso, ref string numeroString)
+        {
+            
+            int unidadeMilhao = Int32.Parse(numeroString.Substring(0, 1));
+            numeroPorExtenso += numeros[unidadeMilhao];
+
+
+            numero -= unidadeMilhao * 1000000;
+
+            if (numero == 0)
+                numeroPorExtenso += " Milhão de";
+            else
+                numeroPorExtenso += " Milhão";
+
+           
+            if (numeros.ContainsKey(numero / 1000))
                 numeroPorExtenso += " e ";
             else
                 numeroPorExtenso += " ";
